@@ -8,14 +8,14 @@ const debug = require('debug')('authDeity: server');
 const httpErrors = require('http-errors');
 
 // app modules
-const authRouter = require('route/auth-router');
-const deityRouter = require('route/deity-router');
-const handleError = require('lib/handle-error');
-const parseBearerAuth = require('lib/parse-bearer-auth');
+const authRouter = require('./route/auth-router');
+const deityRouter = require('./route/deity-router');
+const handleError = require('./lib/handle-error');
+const parseBearerAuth = require('./lib/parse-bearer-auth');
 
 //  server constants
 const app = express();
-const port = process.env.PORT || 3030;
+const port = process.env.PORT || 3000;
 const mongoURI = process.env.MONGO_URI || 'mongobd://localhost/authDeityDev';
 
 // mongo setup
@@ -30,13 +30,8 @@ app.all('/', parseBearerAuth, function(req, res){
   res.send('user authorized');
 });
 
-app.use(deityRouter);
-app.use(authRouter);
-
-app.all('/', function(req, res){
-  console.log(req.userId);
-  res.send('success');
-});
+app.use('/api', deityRouter);
+app.use('/api', authRouter);
 
 app.use('*', function( req, res, next){
   debug('404 route');
@@ -47,7 +42,7 @@ app.use(handleError);
 
 // setup server
 const server = module.exports = app.listen(port, function(){
-  debug('server up!!', port);
+  debug(`server up!! ${port}`);
 });
 
 server.isRunning = true;

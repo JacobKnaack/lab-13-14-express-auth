@@ -3,6 +3,7 @@
 const httpErrors = require('http-errors');
 const debug = require('debug')('authDeity:user');
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 
@@ -13,9 +14,10 @@ const userSchema = mongoose.Schema({
 });
 
 userSchema.methods.generateHash = function(password){
-  debug('user:generateHash');
-  return new Promise((resolve) => {
+  debug('authUser:generateHash');
+  return new Promise((resolve, reject) => {
     bcrypt.hash(password, 8, (err, hash) => {
+      if(err) return reject(err);
       this.password = hash;
       resolve(this);
     });
@@ -23,7 +25,7 @@ userSchema.methods.generateHash = function(password){
 };
 
 userSchema.methods.compareHash = function(password){
-  debug('user:compareHash');
+  debug('authUser:compareHash');
   return new Promise((resolve, reject) => {
     bcrypt.compare(password, this.password,  (err, result) => {
       if(err) return reject(err);
@@ -34,13 +36,13 @@ userSchema.methods.compareHash = function(password){
 };
 
 userSchema.methods.generateFindHash = function(){
-  debug('user:generateFindHash');
+  debug('authUser:generateFindHash');
   return new Promise((resolve, reject) => {
     var tries = 0;
     _generateFindHash.call(this);
 
     function _generateFindHash(){
-      this.findHash = crypto.ransBtyes(32).toString('hex');
+      this.findHash = crypto.randomBytes(32).toString('hex');
       this.save()
       .then( () => resolve(this.findHash))
       .catch( (err) => {
@@ -52,11 +54,13 @@ userSchema.methods.generateFindHash = function(){
   });
 };
 
-userSchema.methjods.generateToken = function(){
-  debug('user:generateToke');
+userSchema.methods.generateToken = function(){
+  debug('authUser:generateToken');
   return new Promise((resolve, reject) => {
     this.generateFindHash()
-    .then(findHash => resolve(jwt.sign({token: findHash}, process.enc.APP_SECRET)))
+    .then(findHash => resolve(jwt.sign({token: findHash}, process.env.APP_SECRET)))
     .catch(reject);
   });
 };
+
+module.exports = mongoose.model('user', userSchema);

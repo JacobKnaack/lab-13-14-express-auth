@@ -6,7 +6,7 @@ const Router = require('express').Router;
 const jsonParser = require('body-parser').json();
 
 // app
-const parseBearerAuth = require('../lib/parseBearAuth');
+const parseBearerAuth = require('../lib/parse-bearer-auth');
 const deityController = require('../controller/deity-controller');
 
 // module

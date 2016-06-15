@@ -1,11 +1,13 @@
 'use strict';
 
+// npm
 const debug = require('debug')('authdeity:auth-controller');
 
+// app
 const User = require('../model/user');
 
 exports.signup = function(reqBody){ // function for signing up our new users
-  debug('authControll-signup');
+  debug('authControl-signup');
   return new Promise((resolve, reject) => {
     var password = reqBody.password;
     delete reqBody.password;
