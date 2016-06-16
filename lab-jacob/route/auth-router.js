@@ -6,7 +6,7 @@ const jsonParser = require('body-parser').json();
 const debug = require('debug')('authDeity:auth-router');
 const parseBasicAuth = require('../lib/parse-basic-auth');
 
-// other local apps
+// apps
 const authController = require('../controller/auth-controller');
 
 // module constants

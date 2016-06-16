@@ -8,7 +8,7 @@ const jwt = require('jsonwebtoken');
 // app
 const User = require('../model/user');
 
-module.exports = function(req, res, next){
+module.exports = function(req, res, next){ // checks if username and password exists
   debug('parse-bearer-auth');
   if(!req.headers.authorization)
     return next(httpErrors(401, 'no authorization header'));
@@ -18,7 +18,7 @@ module.exports = function(req, res, next){
     if(err) return next(httpErrors(401, err.message));
     User.findOne({findHash: unHash.token})
     .then( user => {
-      req.userId = user;
+      req.userId = user._id;
       next();
     })
     .catch(err => {

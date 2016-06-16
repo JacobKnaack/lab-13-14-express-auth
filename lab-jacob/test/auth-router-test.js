@@ -11,7 +11,7 @@ const request = require('superagent-use');
 const agentPromise = require('superagent-promise-plugin');
 
 // mah apps
-//const authController = require('../controller/auth-controller');
+const authController = require('../controller/auth-controller');
 const userController = require('../controller/user-controller');
 
 const port = process.env.PORT || 3000;
@@ -62,6 +62,33 @@ describe('testing the auth-router', function(){
         password: '123456'
       })
       .then(res => {
+        expect(res.status).to.equal(200);
+        expect(res.text.length).to.equal(205);
+        done();
+      }).catch(done);
+    });
+  });
+
+  describe('testing GET for /api/signin', function(){
+    before((done) =>{
+      debug('beforeBlock-auth-GET-test');
+      authController.signup({username:'tester', password: '123456'})
+      .then(() => done())
+      .catch(done);
+    });
+
+    after((done) => {
+      debug('aftterBlock-auth-GET-test');
+      userController.removeAllUsers()
+      .then(() => done())
+      .catch(done);
+    });
+
+    it('should return another fat sexy token', function(done){
+      debug('auth-GET-test');
+      request.get(`${homeUrl}/signin`)
+      .auth('tester', '123456')
+      .then( res => {
         expect(res.status).to.equal(200);
         expect(res.text.length).to.equal(205);
         done();

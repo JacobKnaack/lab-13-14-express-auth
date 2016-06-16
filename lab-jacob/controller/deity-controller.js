@@ -12,3 +12,5 @@ exports.createDeity = function(reqBody){
     .catch(err => reject(httpErrors(400, err.message)));
   });
 };
+
+// add fetch, update and delete

@@ -26,7 +26,7 @@ exports.signin = function(auth){ // function allowing user singin
     User.findOne({username: auth.username})
     .then( user => user.compareHash(auth.password))
     .then( user => user.generateToken())
-    .catch( token => resolve(token))
+    .then( token => resolve(token))
     .catch(reject);
   });
 };

@@ -18,7 +18,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 const mongoURI = process.env.MONGO_URI || 'mongobd://localhost/authDeityDev';
 
-// mongo setup
+// connect to mongo
 mongoose.connect(mongoURI);
 
 // middleware
@@ -33,7 +33,7 @@ app.all('/', parseBearerAuth, function(req, res){
 app.use('/api', deityRouter);
 app.use('/api', authRouter);
 
-app.use('*', function( req, res, next){
+app.all('*', function( req, res, next){
   debug('404 route');
   next(httpErrors(404, 'not a route'));
 });

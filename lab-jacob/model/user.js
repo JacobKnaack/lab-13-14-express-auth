@@ -24,7 +24,7 @@ userSchema.methods.generateHash = function(password){
   });
 };
 
-userSchema.methods.compareHash = function(password){
+userSchema.methods.compareHash = function(password){ //compares the password with the hash
   debug('authUser:compareHash');
   return new Promise((resolve, reject) => {
     bcrypt.compare(password, this.password,  (err, result) => {
@@ -58,7 +58,8 @@ userSchema.methods.generateToken = function(){
   debug('authUser:generateToken');
   return new Promise((resolve, reject) => {
     this.generateFindHash()
-    .then(findHash => resolve(jwt.sign({token: findHash}, process.env.APP_SECRET)))
+    .then(findHash => //findHash exists here, why doesn't it resolve?
+      resolve(jwt.sign({token: findHash}, process.env.APP_SECRET)))
     .catch(reject);
   });
 };
