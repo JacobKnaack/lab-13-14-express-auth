@@ -13,4 +13,9 @@ exports.createDeity = function(reqBody){
   });
 };
 
+exports.removeAllDeities = function(){
+  debug('removeDeities');
+  return Deity.remove({});
+};
+
 // add fetch, update and delete
