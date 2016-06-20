@@ -26,10 +26,7 @@ exports.updateDeity = function(id, reqBody){
   debug('deityController:update');
   return new Promise((resolve, reject) => {
     Deity.findOneAndUpdate({_id: id}, {$set: reqBody}, {new: true})
-    .then(deity => {
-      console.log(deity);
-      resolve(deity);
-    })
+    .then(deity => resolve(deity))
     .catch( err => reject(httpErrors(400, err.message)));
   });
 };
@@ -42,7 +39,6 @@ exports.deleteDeity = function(id){
     .catch(err => reject(httpErrors(404, err.message)));
   });
 };
-
 
 exports.removeAllDeities = function(){
   debug('removeDeities');

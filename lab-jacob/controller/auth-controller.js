@@ -2,6 +2,7 @@
 
 // npm
 const debug = require('debug')('authdeity:auth-controller');
+const httpErrors = require('http-errors');
 
 // app
 const User = require('../model/user');
@@ -9,6 +10,7 @@ const User = require('../model/user');
 exports.signup = function(reqBody){ // function for signing up our new users
   debug('authControl-signup');
   return new Promise((resolve, reject) => {
+    if(!reqBody.username || !reqBody.password) return reject(httpErrors(400, 'username and password required'));
     var password = reqBody.password;
     delete reqBody.password;
     var user = new User(reqBody);

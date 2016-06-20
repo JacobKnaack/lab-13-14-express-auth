@@ -67,6 +67,24 @@ describe('testing the auth-router', function(){
         done();
       }).catch(done);
     });
+
+    describe('testing a bad response', function() {
+      it('should return a 400', (done) => {
+        request.post(`${homeUrl}/signup`)
+        .send({})
+        .then(done)
+        .catch(err => {
+          try {
+            const res = err.response;
+            expect(res.status).to.equal(400);
+            expect(res.text).to.equal('BadRequestError');
+            done();
+          } catch(err) {
+            done(err);
+          }
+        });
+      });
+    });
   });
 
   describe('testing GET for /api/signin', function(){
@@ -93,6 +111,24 @@ describe('testing the auth-router', function(){
         expect(res.text.length).to.equal(205);
         done();
       }).catch(done);
+    });
+
+    describe('testing unathorized access', function() {
+      it('should return a 401', (done) => {
+        request.get(`${homeUrl}/signin`)
+        .auth('tester', '9393939')
+        .then(done)
+        .catch( err => {
+          try {
+            const res = err.response;
+            expect(res.status).to.equal(401);
+            expect(res.text).to.equal('UnauthorizedError');
+            done();
+          } catch(err) {
+            done(err);
+          }
+        });
+      });
     });
   });
 });

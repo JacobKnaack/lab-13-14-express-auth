@@ -83,6 +83,43 @@ describe('testing the deity router', function(){
       });
     });
 
+    describe('testing an unauthorized error on POST', () => {
+      it('should return a 401', (done) => {
+        request.post(`${homeUrl}/deity`)
+        .send({name: 'testing', power: 'super tests'})
+        .set({})
+        .then(done)
+        .catch((err) => {
+          try {
+            const res = err.response;
+            expect(res.status).to.equal(401);
+            expect(res.text).to.equal('UnauthorizedError');
+            done();
+          } catch (err) {
+            done(err);
+          }
+        });
+      });
+    });
+
+    describe('testing bad request on POST', () => {
+      it('should return a 400', (done) => {
+        request.post(`${homeUrl}/deity`)
+        .send({})
+        .set({Authorization: `Bearer ${newUser.token}`})
+        .then(done)
+        .catch((err) => {
+          try {
+            const res = err.response;
+            expect(res.status).to.equal(400);
+            done();
+          } catch (err) {
+            done(err);
+          }
+        });
+      });
+    });
+
     describe('testing successful GET on /api/deity', () => {
       before((done) => {
         debug('GET-beforeBlock');
@@ -138,7 +175,7 @@ describe('testing the deity router', function(){
       });
     });
 
-    describe('testing successful DELTE on /api/deity', () => {
+    describe('testing successful DELETE on /api/deity', () => {
       before((done) => {
         debug('DELETE-beforeBlock');
         request.post(`${homeUrl}/deity`)
