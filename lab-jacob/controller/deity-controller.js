@@ -33,7 +33,7 @@ exports.updateDeity = function(id, reqBody){
     }
     Deity.findOneAndUpdate({_id: id}, {$set: reqBody}, {new: true})
     .then(deity => resolve(deity))
-    .catch( err => reject(httpErrors(400, err.message)));
+    .catch( err => reject(httpErrors(404, err.message)));
   });
 };
 

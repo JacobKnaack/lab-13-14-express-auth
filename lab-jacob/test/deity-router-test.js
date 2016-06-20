@@ -149,7 +149,7 @@ describe('testing the deity router', function(){
       // not working
       describe('testing bad request on GET', () => {
         it('should return a 400', (done) => {
-          request.get(`${homeUrl}/deity`)
+          request.get(`${homeUrl}/deity/{}`)
           .set({Authorization: `Bearer ${newUser.token}`})
           .then(done)
           .catch((err) => {
@@ -229,8 +229,8 @@ describe('testing the deity router', function(){
       // not working
       describe('testing bad request on PUT', () => {
         it('should return a 400', (done) => {
-          request.put (`${homeUrl}/deity/`)
-          .send({})
+          request.put (`${homeUrl}/deity/{}`)
+          .send({power: 'somehting'})
           .set({Authorization: `Bearer ${newUser.token}`})
           .then(done)
           .catch(err => {
