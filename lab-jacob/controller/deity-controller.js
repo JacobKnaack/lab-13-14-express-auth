@@ -16,24 +16,22 @@ exports.createDeity = function(reqBody){
 exports.fetchDeity = function(id){
   debug('deityController:read');
   return new Promise((resolve, reject) => {
-    if(!id) {
-      return reject(httpErrors(400, 'bad request'));
-    }
     Deity.findOne({_id: id})
     .then(deity => resolve(deity))
-    .catch(err => reject(httpErrors(404, err.message)));
+    .catch(err => {
+      if(err.reason == undefined) reject(httpErrors(404, err.message));
+    });
   });
 };
 
 exports.updateDeity = function(id, reqBody){
   debug('deityController:update');
   return new Promise((resolve, reject) => {
-    if(!reqBody.name && !reqBody.power) {
-      return reject(httpErrors(400, 'bad request'));
-    }
     Deity.findOneAndUpdate({_id: id}, {$set: reqBody}, {new: true})
     .then(deity => resolve(deity))
-    .catch( err => reject(httpErrors(404, err.message)));
+    .catch(err => {
+      if(err.reason == undefined) reject(httpErrors(404, err.message));
+    });
   });
 };
 

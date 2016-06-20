@@ -34,7 +34,10 @@ app.use('/api', deityRouter);
 app.use('/api', authRouter);
 
 app.all('*', function( req, res, next){
-  debug('404 route');
+  debug('400/404 Error route');
+  if(req._readableState.length == 0) {
+    return next(httpErrors(400, 'no request given'));
+  }
   next(httpErrors(404, 'not a route'));
 });
 
