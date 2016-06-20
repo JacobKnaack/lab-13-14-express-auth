@@ -25,15 +25,23 @@ exports.fetchDeity = function(id){
 exports.updateDeity = function(id, reqBody){
   debug('deityController:update');
   return new Promise((resolve, reject) => {
-    Deity.findOneAndUpdate({_id: id, reqBody})
-    .then(deity => resolve(deity))
+    Deity.findOneAndUpdate({_id: id}, {$set: reqBody}, {new: true})
+    .then(deity => {
+      console.log(deity);
+      resolve(deity);
+    })
     .catch( err => reject(httpErrors(400, err.message)));
   });
 };
-//
-// exports.deleteDeity = function(id){
-//
-// };
+
+exports.deleteDeity = function(id){
+  debug('deityController:delete');
+  return new Promise((resolve, reject) => {
+    Deity.findOneAndRemove({_id: id})
+    .then(deity => resolve(deity))
+    .catch(err => reject(httpErrors(404, err.message)));
+  });
+};
 
 
 exports.removeAllDeities = function(){

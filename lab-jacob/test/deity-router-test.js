@@ -114,7 +114,7 @@ describe('testing the deity router', function(){
       before((done) => {
         debug('PUT-beforeBlock');
         request.post(`${homeUrl}/deity`)
-        .send({name: 'something', power: 'testy testers'})
+        .send({name: 'something else', power: 'zesty zesters'})
         .set({Authorization: `Bearer ${newUser.token}`})
         .then(res => {
           debug(res.body);
@@ -132,6 +132,34 @@ describe('testing the deity router', function(){
         .set({Authorization: `Bearer ${newUser.token}`})
         .then( res => {
           expect(res.status).to.equal(200);
+          expect(res.body.name).to.equal('sammy');
+          done();
+        }).catch(done);
+      });
+    });
+
+    describe('testing successful DELTE on /api/deity', () => {
+      before((done) => {
+        debug('DELETE-beforeBlock');
+        request.post(`${homeUrl}/deity`)
+        .send({name: 'another test', power: 'testitude'})
+        .set({Authorization: `Bearer ${newUser.token}`})
+        .then(res => {
+          debug(res.body);
+          this.tempDeity = res.body;
+          done();
+        }).catch((err) => {
+          debug('ERROR:', err.message);
+          done();
+        });
+      });
+
+      it('should delete a deity', (done) => {
+        request.del(`${homeUrl}/deity/${this.tempDeity._id}`)
+        .set({Authorization: `Bearer ${newUser.token}`})
+        .then(res => {
+          expect(res.status).to.equal(204);
+          expect(res.body._id).to.equal(undefined);
           done();
         }).catch(done);
       });
