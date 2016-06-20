@@ -145,6 +145,58 @@ describe('testing the deity router', function(){
           done();
         }).catch(done);
       });
+
+      // not working
+      describe('testing bad request on GET', () => {
+        it('should return a 400', (done) => {
+          request.get(`${homeUrl}/deity`)
+          .set({Authorization: `Bearer ${newUser.token}`})
+          .then(done)
+          .catch((err) => {
+            try {
+              const res = err.response;
+              expect(res.status).to.equal(400);
+              done();
+            } catch (err) {
+              done(err);
+            }
+          });
+        });
+      });
+
+      describe('testing not found on GET', () => {
+        it('should return a 404', (done) => {
+          request.get(`${homeUrl}/deity/125712635`)
+          .set({Authorization: `Bearer ${newUser.token}`})
+          .then(done)
+          .catch((err) => {
+            try {
+              const res = err.response;
+              expect(res.status).to.equal(404);
+              done();
+            } catch (err) {
+              done(err);
+            }
+          });
+        });
+      });
+
+      describe('testing unauthorized on GET', () => {
+        it('should return a 401', (done) => {
+          request.get(`${homeUrl}/deity/${this.tempDeity._id}`)
+          .set({})
+          .then(done)
+          .catch((err) => {
+            try {
+              const res = err.response;
+              expect(res.status).to.equal(401);
+              done();
+            } catch (err) {
+              done(err);
+            }
+          });
+        });
+      });
     });
 
     describe('testing successful PUT on /api/deity', () => {
@@ -172,6 +224,62 @@ describe('testing the deity router', function(){
           expect(res.body.name).to.equal('sammy');
           done();
         }).catch(done);
+      });
+
+      // not working
+      describe('testing bad request on PUT', () => {
+        it('should return a 400', (done) => {
+          request.put (`${homeUrl}/deity/`)
+          .send({})
+          .set({Authorization: `Bearer ${newUser.token}`})
+          .then(done)
+          .catch(err => {
+            try {
+              const res = err.response;
+              expect(res.status).to.equal(400);
+              done();
+            } catch (err) {
+              done(err);
+            }
+          });
+        });
+      });
+
+      //not working
+      describe('testing not found on PUT', () => {
+        it('should return a 404', (done) => {
+          request.put (`${homeUrl}/deity/27469782164`)
+          .send({name: 'another name'})
+          .set({Authorization: `Bearer ${newUser.token}`})
+          .then(done)
+          .catch(err => {
+            try {
+              const res = err.response;
+              expect(res.status).to.equal(404);
+              done();
+            } catch (err) {
+              done(err);
+            }
+          });
+        });
+      });
+
+      describe('testing unauthorized on PUT', () => {
+        it('should return a 401', (done) => {
+          request.put (`${homeUrl}/deity/${this.tempDeity._id}`)
+          .send({name: 'another name'})
+          .set({})
+          .then(done)
+          .catch(err => {
+            try {
+              const res = err.response;
+              expect(res.status).to.equal(401);
+              done();
+            } catch (err) {
+              done(err);
+            }
+          });
+        });
       });
     });
 
